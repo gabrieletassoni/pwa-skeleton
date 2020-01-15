@@ -1,4 +1,4 @@
-const CACHE_NAME = 'InventoryPWA-63';
+const CACHE_NAME = 'ReWallPWA-1';
 const expectedCaches = [CACHE_NAME];
 
 // the list of files that need to be cached

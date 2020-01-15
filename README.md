@@ -2,7 +2,7 @@
 
 run ```npm install```
 run ```npm run dev```
-run ```python -m SimpleHTTPServer 8000``` and test it on http://localhost:8000
+run ```npm run server``` and test it on http://localhost:8000
 
 # PWA Skeleton
 
@@ -19,6 +19,7 @@ A simple Progressive Web App skeleton project.
 - Offline support
 - ES lint
 - Add to homescreen (android)
+- Reload on update (keeps the application updated)
 
 ## License
 

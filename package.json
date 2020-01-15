@@ -1,9 +1,11 @@
 {
-  "name": "pwa-inventory",
+  "name": "rewall",
   "version": "1.0.0",
-  "description": "A simple Progressive Web App skeleton project",
+  "description": "Draw your arts on city walls using AR",
   "main": "index.js",
   "scripts": {
+    "serve": "python -m SimpleHTTPServer 8000",
+    "server": "python -m SimpleHTTPServer 8000",
     "dev": "NODE_ENV=development webpack --progress --hide-modules --config=webpack.config.js",
     "watch": "NODE_ENV=development webpack --watch --progress --hide-modules --config=webpack.config.js",
     "build": "NODE_ENV=production webpack --no-progress --hide-modules --config=webpack.config.js"
@@ -14,12 +16,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/james2doyle/pwa-skeleton.git"
+    "url": "https://gold.alchemic.it/openproject/git/rewall.git"
   },
   "author": {
-    "name": "James Doyle",
-    "email": "james2doyle@gmail.com",
-    "url": "https://ohdoylerules.com/"
+    "name": "Gabriele Tassoni",
+    "email": "gabriele.tassoni@gmail.com",
+    "url": "https://dinamicamente.org/"
   },
   "license": "MIT",
   "devDependencies": {
