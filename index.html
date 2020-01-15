@@ -1,0 +1,575 @@
+<html>
+
+<head>
+  <title>Inventario</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+  <meta name="description" content="POC for Inventory">
+  <meta name="author" content="Bancolini SRL">
+
+  <!-- Web Application Manifest -->
+  <link rel="apple-touch-icon" sizes="57x57" href="./images/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="./images/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="./images/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="./images/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="./images/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="./images/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="./images/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="./images/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./images/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./images/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="./images/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./images/icons/favicon-16x16.png">
+  <link rel="manifest" href="./manifest.json">
+  <meta name="msapplication-TileColor" content="#000000">
+  <meta name="msapplication-TileImage" content="./images/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#000000">
+  <!-- <link rel="manifest" href="./manifest.json"> -->
+  <link rel="shortcut icon" href="./favicon.ico">
+
+  <!-- Add to homescreen for Chrome on Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <!-- Color the status bar on mobile devices -->
+  <!-- <meta name="theme-color" content="#006633"> -->
+
+  <link rel="stylesheet" href="./dist/main.css">
+  <link rel="stylesheet" href="./dist/material-icons.css">
+  <style>
+    .hidden {
+      display: none;
+    }
+
+    .shown {
+      display: block;
+    }
+
+    .card {
+      border-radius: 10px;
+      margin-bottom: 0.5em;
+      padding: 0.2em;
+    }
+
+    .green {
+      color: black;
+      background-color: rgba(0, 200, 50, .7);
+    }
+
+    .red {
+      background-color: rgba(165, 40, 40, 0.7);
+    }
+
+    .white {
+      color: black;
+      background-color: rgba(245, 224, 224, 0.7);
+    }
+
+    .neutral {
+      background-color: rgba(0, 0, 0, .7);
+    }
+  </style>
+</head>
+
+<body>
+  <aside class="mdc-drawer mdc-drawer--dismissible">
+    <div class="mdc-drawer__header">
+      <h3 class="mdc-drawer__title">RFID Reader <i class="material-icons" aria-hidden="true" id="online-indicator"
+          style="font-size:0.8em;">flash_off</i></h3>
+      <h6 class="mdc-drawer__subtitle">Version: <span id="version"></span></h6>
+    </div>
+    <div class="mdc-drawer__content">
+      <nav class="mdc-list">
+        <a class="mdc-list-item mdc-list-item--activated" href="javascript:read();" aria-selected="true">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">inbox</i>
+          <span class="mdc-list-item__text">Lettura Diretta</span>
+        </a>
+        <a class="mdc-list-item" href="javascript:check();">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">star</i>
+          <span class="mdc-list-item__text">Checklist</span>
+        </a>
+
+        <hr class="mdc-list-divider">
+        <h6 class="mdc-list-group__subheader">Sincronizzazione</h6>
+        <a class="mdc-list-item" href="javascript:importFile();">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">subdirectory_arrow_left</i>
+          <span class="mdc-list-item__text">Importa</span>
+        </a>
+        <!-- <a class="mdc-list-item" href="javascript:exportFile();">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">arrow_forward</i>
+          <span class="mdc-list-item__text">Esporta</span>
+        </a> -->
+      </nav>
+    </div>
+  </aside>
+  <div class="mdc-drawer-app-content">
+    <header class="mdc-top-app-bar app-bar black-bar" id="app-bar">
+      <div class="mdc-top-app-bar__row">
+        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+          <a href="#" class="demo-menu material-icons mdc-top-app-bar__navigation-icon">menu</a>
+          <span class="mdc-top-app-bar__title">Inventario</span>
+        </section>
+        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
+        </section>
+      </div>
+      <div role="progressbar" class="mdc-linear-progress">
+        <div class="mdc-linear-progress__buffering-dots"></div>
+        <div class="mdc-linear-progress__buffer"></div>
+        <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+          <span class="mdc-linear-progress__bar-inner"></span>
+        </div>
+        <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+          <span class="mdc-linear-progress__bar-inner"></span>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content" id="main-content"
+      style="margin:0 auto;max-width:310px;background:url(./images/icons/ms-icon-310x310.png) 50% 50% no-repeat;background-size:contain;">
+      <div class="mdc-top-app-bar--fixed-adjust">
+        <input id="label-type" name="label-type" type="hidden" />
+      </div>
+      <div style="overflow:hidden">
+        <div id="count" class="hidden card neutral">
+        </div>
+        <div id="function-button" class="card neutral hidden" onclick="functionButtonFunc();">
+        </div>
+        <div id="close-activity" class="card neutral hidden" onclick="closeRead()">
+          <p>Chiudi Attività</p>
+        </div>
+        <div id="body">
+        </div>
+      </div>
+    </main>
+    <div class="mdc-snackbar">
+      <div class="mdc-snackbar__surface">
+        <div class="mdc-snackbar__label" role="status" aria-live="polite">
+          Can't send photo. Retry in 5 seconds.
+        </div>
+        <!-- <div class="mdc-snackbar__actions">
+          <button type="button" class="mdc-button mdc-snackbar__action">Retry</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let mode = undefined;
+    let readsHidden = false;
+    const countField = document.getElementById("count");
+    const body = document.getElementById("body");
+    const closeActivity = document.getElementById("close-activity");
+    const functionButton = document.getElementById("function-button");
+
+    function hex2a(hexx) {
+      var hex = hexx.toString(); //force conversion
+      var str = '';
+      for (var i = 0;
+        (i < hex.length && hex.substr(i, 2) !== '00'); i += 2)
+        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+      return str;
+    }
+    const channel = new BroadcastChannel('sw-messages');
+    channel.addEventListener('message', event => {
+      switch (event.data.action) {
+        case "setVersion":
+          // Set the version from the cache version
+          window.localStorage.setItem("version", event.data.version);
+          document.getElementById("version").innerText = event.data.version;
+      }
+    });
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').then(function (registration) {
+        console.info('ServiceWorker registration successful with scope:', registration.scope);
+
+        // if there's no controller, this page wasn't loaded
+        // via a service worker, so they're looking at the latest version.
+        // In that case, exit early
+        if (!navigator.serviceWorker.controller) return;
+
+        // if there's an updated worker already waiting, update
+        if (registration.waiting) {
+          window.snackbar.labelText = 'App update found: reloading.';
+          window.snackbar.open();
+          registration.waiting.postMessage({
+            updateSw: true
+          });
+          return;
+        }
+
+        // if there's an updated worker installing, track its
+        // progress. If it becomes "installed", update
+        if (registration.installing) {
+          registration.addEventListener('statechange', function () {
+            if (registration.installing.state == 'installed') {
+              window.snackbar.labelText = 'App update found: reloading.';
+              window.snackbar.open();
+              registration.installing.postMessage({
+                updateSw: true
+              });
+              return;
+            }
+          });
+        }
+
+        // otherwise, listen for new installing workers arriving.
+        // If one arrives, track its progress.
+        // If it becomes "installed", update
+        registration.addEventListener('updatefound', function () {
+          let newServiceWorker = registration.installing;
+
+          newServiceWorker.addEventListener('statechange', function () {
+            if (newServiceWorker.state == 'installed') {
+              window.snackbar.labelText = 'App update found: reloading.';
+              window.snackbar.open();
+              newServiceWorker.postMessage({
+                updateSw: true
+              });
+            }
+          });
+        });
+      }).catch(function (error) {
+        console.info('ServiceWorker registration failed:', error);
+      });
+      // Ensure refresh is only called once.
+      // This works around a bug in "force update on reload".
+      var refreshing;
+      navigator.serviceWorker.addEventListener('controllerchange', function () {
+        if (refreshing) return;
+        window.location.reload();
+        refreshing = true;
+      });
+    }
+    // sw script
+    self.addEventListener('message', function (e) {
+      if (e.data.updateSw) {
+        self.skipWaiting();
+      }
+    });
+  </script>
+  <script src="./dist/main.js"></script>
+  <script src="./config.js"></script>
+  <script>
+    console.log("Config Initialized")
+    // After Config read, do some operations
+    // Overriding socket default callback on message recieving
+    if (window.websocket.ws)
+      window.websocket.ws.close();
+    window.websocket.socketOnMessage = function (event) {
+      const barcodeScanRegExp = /Barcode \(([\s\S]*)\,\) \[([\s\S]*)\]/;
+      const codeFilter = /^6Y.+$/;
+      const matches = barcodeScanRegExp.exec(event.data);
+      const uids = (matches) ? matches[1].split(/\r?\n/) : [];
+      // const data = matches[2].split(/\\n/);
+      // document.getElementById("body").innerHTML += `<pre>${event.data}</pre>`;
+      const currentCSV = window.localStorage.getItem("xlsDB");
+      if (currentCSV) {
+        const parsed = window.Papa.parse(currentCSV);
+        // Solo se ci sono dei dati immagazzinati nella picking list faccio le elaboarazioni
+        switch (mode) {
+          case "check":
+            // Tutta la roba letta e riconosciuta come valida, la elaboro
+            for (const [index, uid] of uids.entries()) {
+              const ascii = hex2a(uid);
+              const pin = ascii.substr(2, 13);
+              const elem = document.getElementById(pin);
+              // Se non esiste, posso aggiungerlo, se l'ho già letto, lo filtro
+              // Ha un formato conosciuto
+              if (codeFilter.test(ascii))
+                if (elem && !elem.classList.contains("red")) {
+                  // Se sono red, allora non li voglio ri-marchiare verdi
+                  // A una successiva lettura dello stesso
+                  // L'ho trovato e ha un Formato conosciuto
+                  // elimino dalla posizione trovata per spostarlo on top
+                  // Metto la riga in green
+                  elem.remove();
+                  elem.classList.replace("white", "green");
+                  body.insertBefore(elem, body.firstChild);
+                  // `<div id="${pin}" class="card green" data-read-date="${moment().format("YYYY-MM-DD HH:mm:ss")}">
+                  //   <p><strong>${pin}</strong></p>
+                  // </div>
+                  // ${body.innerHTML}`;
+                } else if (elem && elem.classList.contains("red")) {
+                // Nothing to do
+              } else {
+                // Non l'ho trovato, ma ha un formato conosciuto
+                // Lo aggiungo alla lista e lo metto in ROSSO
+                body.innerHTML =
+                  `<div id="${pin}" class="card red" data-read-date="${moment().format("YYYY-MM-DD HH:mm:ss")}">
+                            <p><strong>${pin}</strong></p>
+                          </div>
+                          ${body.innerHTML}`;
+              }
+              // Aggiorno i conteggi
+              countField.innerHTML =
+                `<div>
+                        <div><strong>Ancora da rilevare:</strong> ${document.getElementsByClassName("white").length}</div>
+                        <div><strong>PIN rilevati:</strong> ${document.getElementsByClassName("green").length}</div>
+                        <div><strong>PIN non presenti:</strong> ${document.getElementsByClassName("red").length}</div>
+                      </div>`;
+            }
+            break;
+          case "read":
+            // Tutta la roba letta e riconosciuta come valida, la elaboro
+            for (const [index, uid] of uids.entries()) {
+              const ascii = hex2a(uid);
+              const pin = ascii.substr(2, 13);
+              // Se non esiste, posso aggiungerlo, se l'ho già letto, lo filtro
+              if (!document.getElementById(pin))
+                if (codeFilter.test(ascii)) {
+                  let found = parsed.data.filter(function (car) {
+                    return (new RegExp(`^${pin}`)).test(car[0])
+                  });
+                  closeActivity.classList.remove("hidden");
+                  countField.classList.replace("hidden", "shown");
+                  if (found.length) {
+                    countField.innerHTML =
+                      `<div>
+                              <strong>Codici Rilevati:</strong>
+                              ${body.childElementCount + 1}
+                              <div><strong>Ultima Lettura:</strong> ${pin}</div>
+                              <div><strong>${found[0][1]}</strong>: ${found[0][7]}</div>
+                            </div>`;
+                    body.innerHTML =
+                      `<div id="${pin}" class="card green" data-read-date="${moment().format("YYYY-MM-DD HH:mm:ss")}" onclick="unhideAdditionalData(this);">
+                              <p><strong>${pin}</strong>
+                                <div class="additional-data hidden">
+                                  <div><strong>Commessa:</strong> ${found[0][1]}</div>
+                                  <div><strong>Materiale:</strong> ${found[0][4]}</div>
+                                  <div><strong>Colore:</strong> ${found[0][7]}</div>
+                                </div>
+                              </p>
+                            </div>
+                            ${body.innerHTML}`;
+                  } else {
+                    // Non l'ho trovato, ma ha un formato conosciuto
+                    // Lo aggiungo alla lista e lo metto in ROSSO
+                    countField.innerHTML =
+                      `<div>
+                              <strong>Codici Rilevati:</strong>
+                              ${body.childElementCount + 1}
+                              <div><strong>Ultima Lettura:</strong> ${pin}</div>
+                            </div>`;
+                    body.innerHTML =
+                      `<div id="${pin}" class="card red" data-read-date="${moment().format("YYYY-MM-DD HH:mm:ss")}">
+                              <p><strong>${pin}</strong></p>
+                            </div>
+                            ${body.innerHTML}`;
+                  }
+                }
+            }
+            break;
+        }
+      } else {
+        window.snackbar.labelText = 'No picking list present.';
+        window.snackbar.open();
+      }
+
+    }
+    // Starting the websocket
+    window.websocket.startWS(config.datawedge.websocket.address, config.datawedge.websocket
+      .port);
+  </script>
+
+  <script>
+    function check() {
+      // Cleanup
+      readsHidden = false;
+      functionButton.innerHTML = "<p>Nascondi già Letti</p>";
+      body.innerHTML = "";
+      countField.classList.replace("hidden", "shown");
+      closeActivity.classList.remove("hidden");
+      functionButton.classList.remove("hidden");
+      document.querySelector(".mdc-top-app-bar__title").innerText = "Inventario: Controllo"
+      mode = "check";
+      // Rempio di letture il body
+      const currentCSV = window.localStorage.getItem("xlsDB");
+      const parsed = window.Papa.parse(currentCSV);
+      for (const [index, row] of parsed.data.entries()) {
+        if (index > 0 && row[0] != "" && (row[10] == "X" || row[10] == "x"))
+          body.innerHTML = `<div id="${row[0].substr(0, 13)}" class="card white" data-read-date="${moment().format("YYYY-MM-DD HH:mm:ss")}" onclick="unhideAdditionalData(this);">
+              <p><strong>${row[0].substr(0, 13)}</strong>
+                <div class="additional-data hidden">
+                  <div><strong>Commessa:</strong> ${row[1]}</div>
+                  <div><strong>Materiale:</strong> ${row[4]}</div>
+                  <div><strong>Colore:</strong> ${row[7]}</div>
+                </div>
+              </p>
+            </div>
+            ${body.innerHTML}`;
+        // body.innerHTML =
+        // `<div id="${row[0].substr(0, 13)}" class="card white" data-read-date="${moment().format("YYYY-MM-DD HH:mm:ss")}">
+        //     <p><strong>${row[0].substr(0, 13)}</strong></p>
+        //   </div>
+        //   ${body.innerHTML}`;
+      }
+      // Aggiorno i conteggi
+      countField.innerHTML =
+        `<div>
+          <div><strong>Ancora da rilevare:</strong> ${document.getElementsByClassName("white").length}</div>
+          <div><strong>PIN rilevati:</strong> ${document.getElementsByClassName("green").length}</div>
+          <div><strong>PIN non presenti:</strong> ${document.getElementsByClassName("red").length}</div>
+        </div>`;
+      return false;
+    }
+
+    function read() {
+      // Cleanup
+      body.innerHTML = "";
+      countField.classList.replace("shown", "hidden");
+      functionButton.classList.add("hidden");
+      closeActivity.classList.add("hidden");
+      document.querySelector(".mdc-top-app-bar__title").innerText = "Inventario: Lettura"
+      mode = "read";
+      return false;
+    }
+
+    function importFile() {
+      // document.querySelector("#body").innerHTML = '';
+      window.linearProgress.open();
+      // WEBDAV ------------------------------------------------------------------
+      const davConnection = new window.webdavClient.Connection(config.dav);
+      const fileToGet = `/${config.import.directory}/${config.import.file}`;
+
+      // console.log("Getting file from DAV");
+      let stream = davConnection.get(fileToGet);
+      var buffers = [];
+      // console.log("Attaching Data");
+      stream.on('data', (chunk) => {
+        // console.log("Getting a chunk")
+        buffers.push(chunk);
+        // console.log("Got the Chunk")
+      })
+      stream.on('error', (error) => {
+        window.snackbar.labelText =
+          `Server ${config.dav.url} unreachable or file ${fileToGet} not present to user ${config.dav.username}`;
+        window.snackbar.open();
+        window.linearProgress.close();
+      })
+      // console.log("Attaching END");
+      // XLSX parse and import into Localstorage
+      stream.on('end', () => {
+        // console.log('Done.');
+        let imported;
+        try {
+          imported = window.XLSX.read(window.buffer.concat(buffers), {
+            type: 'buffer'
+          });
+        } catch (error) {
+          // console.log(error);
+          window.snackbar.labelText = 'Cannot open XLSX file.';
+          window.snackbar.open();
+          window.linearProgress.close();
+        }
+        // Always Read from the first sheet
+        // And put the matrix inside the localstorage for later retrieval
+        if (imported) {
+          const matrix = window.XLSX.utils.sheet_to_csv(imported.Sheets[imported.SheetNames[0]], {
+            header: 1
+          })
+          window.localStorage.setItem("xlsDB", matrix);
+
+          window.snackbar.labelText = `${matrix.split(/\r?\n/).length} elements imported.`;
+          window.snackbar.open();
+          window.linearProgress.close();
+        }
+      });
+
+      return false;
+    }
+
+    function exportFile(streamBody) {
+      // document.querySelector("#body").innerHTML = '';
+      window.linearProgress.open();
+      // WEBDAV ------------------------------------------------------------------
+
+      // console.log("Connection to DAV");
+      const davConnection = new window.webdavClient.Connection(config.dav);
+      let fileToPut;
+      // let streamBody;
+      let stream;
+
+      fileToPut =
+        `/${config.export.directory}/${moment().format("YYYYMMDDHHmmssSSS")}-${mode}-${config.export.file}`;
+
+      // console.log("Getting file from DAV");
+      stream = davConnection.put(fileToPut);
+      stream.on('error', (e) => {
+        window.snackbar.labelText = `Cannot save CSV file to server for mode ${mode}. Server: ${config.dav.url}, Path: ${fileToPut}`;
+        window.snackbar.open();
+        window.linearProgress.close();
+      });
+      stream.on('end', (e) => {
+        eval(`${mode}()`);
+        window.snackbar.labelText = `File successfully saved to server for mode ${mode}. Server: ${config.dav.url}, Path: ${fileToPut}`;
+        window.snackbar.open();
+        window.linearProgress.close();
+      });
+      // Sending the content
+      // streamBody = window.localStorage.getItem(`last${mode}Reads`);
+      stream.end(streamBody, (e) => {
+        expected(e);
+      });
+
+      return false;
+    }
+
+    function unhideAdditionalData(card) {
+      // console.log(card);
+      const elem = card.querySelector(".additional-data");
+      // console.log(elem);
+      elem.classList.toggle("hidden");
+    }
+
+    function closeRead() {
+      window.linearProgress.open();
+      const reds = document.getElementsByClassName("red");
+      const whites = document.getElementsByClassName("white");
+      const greens = document.getElementsByClassName("green");
+      let reads = [];
+      for (const red of reds) {
+        reads.push(`${red.id};A;${red.dataset.readDate}`);
+      }
+      for (const white of whites) {
+        reads.push(`${white.id};N;${white.dataset.readDate}`);
+      }
+      for (const green of greens) {
+        reads.push(`${green.id};T;${green.dataset.readDate}`);
+      }
+
+      // eval(`${mode}()`);
+
+      // window.localStorage.setItem(`last${mode}Reads`, reads.join("\r\n"));
+      exportFile(reads.join("\r\n"));
+      // window.snackbar.labelText = `Letture salvate per la modalità ${mode}.`;
+      // window.snackbar.open();
+      // window.linearProgress.close();
+    }
+
+    function functionButtonFunc() {
+      const reds = document.getElementsByClassName("red");
+      const greens = document.getElementsByClassName("green");
+      if (readsHidden) {
+        readsHidden = false;
+        functionButton.innerHTML = "<p>Nascondi già Letti</p>";
+        for (const red of reds)
+          red.classList.remove("hidden");
+        for (const green of greens)
+          green.classList.remove("hidden");
+      } else {
+        readsHidden = true;
+        functionButton.innerHTML = "<p>Mostra già Letti</p>";
+        for (const red of reds)
+          red.classList.add("hidden");
+        for (const green of greens)
+          green.classList.add("hidden");
+      }
+    }
+    document.getElementById("version").innerText = window.localStorage.getItem("version");
+  </script>
+</body>
+
+</html>

@@ -1,51 +1,49 @@
 {
-  "name": "rewall",
-  "version": "0.0.1",
-  "private": true,
-  "dependencies": {
-    "@capacitor/core": "1.4.0",
-    "@ionic/react": "^4.11.0",
-    "@ionic/react-router": "^4.11.0",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.4.0",
-    "@testing-library/user-event": "^8.0.3",
-    "@types/jest": "^24.0.25",
-    "@types/node": "^12.12.24",
-    "@types/react": "^16.9.17",
-    "@types/react-dom": "^16.9.4",
-    "@types/react-router": "^5.1.4",
-    "@types/react-router-dom": "^5.1.3",
-    "ionicons": "^4.6.3",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-router": "^5.1.2",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "3.3.0",
-    "typescript": "3.7.4"
-  },
+  "name": "pwa-inventory",
+  "version": "1.0.0",
+  "description": "A simple Progressive Web App skeleton project",
+  "main": "index.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "NODE_ENV=development webpack --progress --hide-modules --config=webpack.config.js",
+    "watch": "NODE_ENV=development webpack --watch --progress --hide-modules --config=webpack.config.js",
+    "build": "NODE_ENV=production webpack --no-progress --hide-modules --config=webpack.config.js"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "engines": {
+    "node": ">=9.0",
+    "npm": ">=5"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/james2doyle/pwa-skeleton.git"
   },
+  "author": {
+    "name": "James Doyle",
+    "email": "james2doyle@gmail.com",
+    "url": "https://ohdoylerules.com/"
+  },
+  "license": "MIT",
   "devDependencies": {
-    "@capacitor/cli": "1.4.0"
-  },
-  "description": "An Ionic project"
+    "babel": "^6.23.0",
+    "babel-core": "^6.26",
+    "babel-eslint": "^8.2.6",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "babel-runtime": "^6.23.0",
+    "css-loader": "^0.28.11",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.13.0",
+    "mini-css-extract-plugin": "^0.4.1",
+    "node-sass": "^4.9.2",
+    "optimize-css-assets-webpack-plugin": "^4.0.3",
+    "sass-loader": "^7.0.3",
+    "uglifyjs-webpack-plugin": "^1.2.7",
+    "webpack": "^4.16.2",
+    "webpack-cli": "^2.1.5",
+    "material-components-web": "^3.2.0",
+    "xlsx": "^0.15.1",
+    "webdav-client": "^1.4.2",
+    "buffer": "^5.4.3",
+    "papaparse": "^5.1.0",
+    "moment": "^2.24.0"
+  }
 }

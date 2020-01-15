@@ -1,7 +1,0 @@
-{
-  "name": "rewall",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "react"
-}
