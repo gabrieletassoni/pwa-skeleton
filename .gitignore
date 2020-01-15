@@ -25,7 +25,6 @@ yarn-error.log*
 
 package-lock.json
 
-
 # Created by https://www.gitignore.io/api/osx,code,react,linux,macos,ionic3,windows,pwa
 # Edit at https://www.gitignore.io/?templates=osx,code,react,linux,macos,ionic3,windows,pwa
 
