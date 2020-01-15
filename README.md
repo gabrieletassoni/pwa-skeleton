@@ -14,6 +14,10 @@ A simple Progressive Web App skeleton project.
 
 run ```npm run build```
 
+## Icons made with
+
+https://www.favicon-generator.org/
+
 ## Structure
 
 - ES6
