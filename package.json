@@ -4,7 +4,6 @@
   "description": "Draw your arts on city walls using AR",
   "main": "index.js",
   "scripts": {
-    "serve": "python -m SimpleHTTPServer 8000",
     "server": "python -m SimpleHTTPServer 8000",
     "dev": "NODE_ENV=development webpack --progress --hide-modules --config=webpack.config.js",
     "watch": "NODE_ENV=development webpack --watch --progress --hide-modules --config=webpack.config.js",
