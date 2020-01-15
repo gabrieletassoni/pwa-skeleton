@@ -6,9 +6,9 @@ A simple Progressive Web App skeleton project.
 
 ## To test during dev
 
-run ```npm install```
-run ```npm run dev``` this compiles main.js ans main.scss
-run ```npm run server``` and test it on http://localhost:8000
+1. run ```npm install```
+2. run ```npm run dev``` this compiles main.js ans main.scss
+3. run ```npm run server``` and test it on http://localhost:8000
 
 ## To build for production
 
