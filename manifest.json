@@ -1,6 +1,6 @@
 {
-  "name": "ReWall BeArtistic",
-  "short_name": "ReWall",
+  "name": "PWASkeleton BeArtistic",
+  "short_name": "PWASkeleton",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

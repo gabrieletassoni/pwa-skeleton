@@ -1,5 +1,5 @@
 {
-  "name": "rewall",
+  "name": "pwa-skeleton",
   "version": "1.0.0",
   "description": "Draw your arts on city walls using AR",
   "main": "index.js",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://gold.alchemic.it/openproject/git/rewall.git"
+    "url": "https://github.com/gabrieletassoni/pwa-skeleton.git"
   },
   "author": {
     "name": "Gabriele Tassoni",
